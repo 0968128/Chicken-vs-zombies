@@ -1,0 +1,3 @@
+class WalkToPoint implements Behavior {
+    
+}
