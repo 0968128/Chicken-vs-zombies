@@ -4,11 +4,24 @@ class GameObject extends HTMLElement {
         super();
         this._x = 0;
         this._y = 0;
-        this.xspeed = 0;
-        this.yspeed = 0;
+        this._xspeed = 0;
+        this._yspeed = 0;
+        this._speedMultiplier = 5;
         this._direction = 1;
         this.draw();
     }
+    get x() { return this._x; }
+    set x(value) { this._x = value; }
+    get y() { return this._y; }
+    set y(value) { this._y = value; }
+    get xspeed() { return this._xspeed; }
+    set xspeed(value) { this._xspeed = value; }
+    get yspeed() { return this._yspeed; }
+    set yspeed(value) { this._yspeed = value; }
+    get speedMultiplier() { return this._speedMultiplier; }
+    set speedMultiplier(value) { this._speedMultiplier = value; }
+    get direction() { return this._direction; }
+    set direction(value) { this._direction = value; }
     update() {
         this.draw();
     }
@@ -19,7 +32,6 @@ class GameObject extends HTMLElement {
 class Chicken extends GameObject {
     constructor() {
         super();
-        this.speedMultiplier = 5;
         this.observers = [];
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this);
@@ -116,7 +128,22 @@ class Zombie extends GameObject {
         this._y = (Math.random() * window.innerHeight / 2) + (window.innerHeight / 2);
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this);
-        chicken.signUp(this);
+        this.chicken = chicken;
+        this.chicken.signUp(this);
+    }
+    calculateSpeedToPoint(xPoint, yPoint) {
+        let xdist = xPoint - this._x;
+        let ydist = yPoint - this._y;
+        let distance = Math.sqrt(xdist * xdist + ydist * ydist);
+        this.xspeed = xdist / distance;
+        this.yspeed = ydist / distance;
+        this.xspeed *= this.speedMultiplier;
+        this.yspeed *= this.speedMultiplier;
+        this._direction = (this.xspeed < 0) ? 1 : -1;
+    }
+    update() {
+        super.update();
+        this.calculateSpeedToPoint(this.chicken.x, this.chicken.y);
     }
     alert() {
         return;
@@ -124,7 +151,31 @@ class Zombie extends GameObject {
 }
 window.customElements.define("zombie-component", Zombie);
 class Facebook {
+    constructor(object) {
+        this.object = object;
+        this.object.style.backgroundImage = "url(images/calling.png)";
+        this.standStill();
+    }
+    standStill() {
+        this.object.xspeed = 0;
+        this.object.yspeed = 0;
+        setTimeout(() => {
+        }, 2000);
+    }
 }
 class WalkToPoint {
+    constructor(object) {
+        this.object = object;
+    }
+    calculateSpeedToPoint(xPoint, yPoint) {
+        let xdist = xPoint - this.object.x;
+        let ydist = yPoint - this.object.y;
+        let distance = Math.sqrt(xdist * xdist + ydist * ydist);
+        this.object.xspeed = xdist / distance;
+        this.object.yspeed = ydist / distance;
+        this.object.xspeed *= this.object.speedMultiplier;
+        this.object.yspeed *= this.object.speedMultiplier;
+        this.object.direction = (this.object.xspeed < 0) ? 1 : -1;
+    }
 }
 //# sourceMappingURL=main.js.map

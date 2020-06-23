@@ -2,7 +2,6 @@
 
 class Chicken extends GameObject implements Subject {
     // private _behavior:Behavior
-    private speedMultiplier: number = 5
     private observers:Observer[] = []
 
     constructor() {
@@ -25,7 +24,7 @@ class Chicken extends GameObject implements Subject {
      * @param xPoint x coordinaat van het punt waar naartoe verplaatst moet worden
      * @param yPoint y coordinaat van het punt waar naartoe verplaatst moet worden
      */
-    private calculateSpeedToPoint(xPoint : number, yPoint : number) : void {
+    private calculateSpeedToPoint(xPoint:number, yPoint:number):void {
         let xdist = xPoint - this._x
         let ydist = yPoint - this._y
         let distance:number = Math.sqrt(xdist * xdist + ydist * ydist);
@@ -37,9 +36,8 @@ class Chicken extends GameObject implements Subject {
         this.yspeed *= this.speedMultiplier
 
         // Is de snelheid op de x-as negatief, dan wordt direction -1
-        // In de draw functie wordt dit gebruikt om de chicken naar links te laten kijken 
-        // als deze naar links beweegt
-        this._direction = (this.xspeed < 0) ? 1 : -1;
+        // In de draw functie wordt dit gebruikt om de chicken naar links te laten kijken als deze naar links beweegt
+        this.direction = (this.xspeed < 0) ? 1 : -1;
     }
 
     update() {
