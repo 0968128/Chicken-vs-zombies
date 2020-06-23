@@ -23,6 +23,8 @@ class GameObject extends HTMLElement {
     get direction() { return this._direction; }
     set direction(value) { this._direction = value; }
     update() {
+        this._x += this.xspeed;
+        this._y += this.yspeed;
         this.draw();
     }
     draw() {
@@ -51,11 +53,6 @@ class Chicken extends GameObject {
         this.yspeed *= this.speedMultiplier;
         this.direction = (this.xspeed < 0) ? 1 : -1;
     }
-    update() {
-        super.update();
-        this._x += this.xspeed;
-        this._y += this.yspeed;
-    }
     signUp(observer) {
         this.observers.push(observer);
     }
@@ -73,6 +70,7 @@ window.customElements.define("chicken-component", Chicken);
 class Game {
     constructor() {
         this.gameObjects = [];
+        this.gameOver = false;
         this.grainCounter = 0;
         this.phoneCounter = 0;
         let chicken = new Chicken();
@@ -96,7 +94,11 @@ class Game {
         for (const gameObject of this.gameObjects) {
             gameObject.update();
         }
-        requestAnimationFrame(() => this.gameLoop());
+        if (!this.gameOver) {
+            requestAnimationFrame(() => this.gameLoop());
+        }
+        else {
+        }
     }
     static getInstance() {
         if (!Game.instance) {
@@ -146,8 +148,6 @@ class Zombie extends GameObject {
     }
     update() {
         super.update();
-        this._x += this.xspeed;
-        this._y += this.yspeed;
         this.calculateSpeedToPoint(this.chicken.x, this.chicken.y);
     }
     alert() {

@@ -43,12 +43,6 @@ class Chicken extends GameObject implements Subject {
         this.direction = (this.xspeed < 0) ? 1 : -1;
     }
 
-    update() {
-        super.update()
-        this._x += this.xspeed;
-        this._y += this.yspeed;
-    }
-
     signUp(observer: Observer): void {
         this.observers.push(observer)
     }

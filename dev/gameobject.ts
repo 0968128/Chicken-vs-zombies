@@ -26,6 +26,8 @@ abstract class GameObject extends HTMLElement {
     }
 
     public update() {
+        this._x += this.xspeed;
+        this._y += this.yspeed;
         this.draw()
     }
 

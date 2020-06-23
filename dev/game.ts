@@ -2,6 +2,7 @@ class Game {
     // Fields
     private gameObjects:GameObject[] = []
     private static instance:Game
+    private gameOver:boolean = false
 
     // Timers (ook fields)
     private grainCounter:number = 0
@@ -41,7 +42,11 @@ class Game {
         }
         
         // Gameloop aan de gang houden
-        requestAnimationFrame(() => this.gameLoop())
+        if(!this.gameOver) {
+            requestAnimationFrame(() => this.gameLoop())
+        } else {
+            // Code om game te resetten
+        }
     }
 
     public static getInstance():Game {

@@ -38,8 +38,6 @@ class Zombie extends GameObject implements Observer {
 
     update() {
         super.update()
-        this._x += this.xspeed;
-        this._y += this.yspeed;
         this.calculateSpeedToPoint(this.chicken.x, this.chicken.y)
     }
 
