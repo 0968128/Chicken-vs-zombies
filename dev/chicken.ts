@@ -1,8 +1,9 @@
 /// <reference path="gameobject.ts" />
 
 class Chicken extends GameObject implements Subject {
-    private _behavior:Behavior
+    // private _behavior:Behavior
     private speedMultiplier: number = 5
+    private observers:Observer[] = []
 
     constructor() {
         super()
@@ -16,10 +17,6 @@ class Chicken extends GameObject implements Subject {
     private onWindowClick(e:MouseEvent) : void {
         // Berekening van de snelheid waar naartoe verplaatst moet worden (positie muisklik)
         this.calculateSpeedToPoint(e.clientX, e.clientY)
-
-        // Nieuwe positie wordt berekend aan de hand van de snelheid
-        this._x += this.xspeed
-        this._y += this.yspeed
     }
     
     /**
@@ -43,6 +40,27 @@ class Chicken extends GameObject implements Subject {
         // In de draw functie wordt dit gebruikt om de chicken naar links te laten kijken 
         // als deze naar links beweegt
         this._direction = (this.xspeed < 0) ? 1 : -1;
+    }
+
+    update() {
+        super.update()
+        this._x += this.xspeed;
+        this._y += this.yspeed;
+    }
+
+    signUp(observer: Observer): void {
+        this.observers.push(observer)
+    }
+
+    signOff(observer: Observer): void {
+        let index = this.observers.indexOf(observer)
+        this.observers.splice(index, 1)
+    }
+
+    alertObservers(): void {
+        for(const observer of this.observers) {
+            observer.alert()
+        }
     }
 }
 

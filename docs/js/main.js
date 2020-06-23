@@ -1,52 +1,73 @@
 "use strict";
-class Chicken extends HTMLElement {
+class GameObject extends HTMLElement {
     constructor() {
         super();
-        this.x = 0;
-        this.y = 0;
+        this._x = 0;
+        this._y = 0;
         this.xspeed = 0;
         this.yspeed = 0;
-        this.direction = 1;
+        this._direction = 1;
+        this.draw();
+    }
+    update() {
+        this.draw();
+    }
+    draw() {
+        this.style.transform = "translate(" + this._x + "px, " + this._y + "px) scale(" + this._direction + ",1)";
+    }
+}
+class Chicken extends GameObject {
+    constructor() {
+        super();
         this.speedMultiplier = 5;
+        this.observers = [];
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this);
         window.addEventListener("click", (e) => this.onWindowClick(e));
     }
     onWindowClick(e) {
         this.calculateSpeedToPoint(e.clientX, e.clientY);
-        this.x += this.xspeed;
-        this.y += this.yspeed;
     }
     calculateSpeedToPoint(xPoint, yPoint) {
-        let xdist = xPoint - this.x;
-        let ydist = yPoint - this.y;
+        let xdist = xPoint - this._x;
+        let ydist = yPoint - this._y;
         let distance = Math.sqrt(xdist * xdist + ydist * ydist);
         this.xspeed = xdist / distance;
         this.yspeed = ydist / distance;
         this.xspeed *= this.speedMultiplier;
         this.yspeed *= this.speedMultiplier;
-        this.direction = (this.xspeed < 0) ? 1 : -1;
+        this._direction = (this.xspeed < 0) ? 1 : -1;
     }
     update() {
-        this.x += this.xspeed;
-        this.y += this.yspeed;
-        this.draw();
+        super.update();
+        this._x += this.xspeed;
+        this._y += this.yspeed;
     }
-    draw() {
-        this.style.transform = "translate(" + this.x + "px, " + this.y + "px) scale(" + this.direction + ",1)";
+    signUp(observer) {
+        this.observers.push(observer);
+    }
+    signOff(observer) {
+        let index = this.observers.indexOf(observer);
+        this.observers.splice(index, 1);
+    }
+    alertObservers() {
+        for (const observer of this.observers) {
+            observer.alert();
+        }
     }
 }
 window.customElements.define("chicken-component", Chicken);
 class Game {
     constructor() {
-        this.zombies = [];
+        this.gameObjects = [];
         this.grains = [];
         this.grainCounter = 0;
         this.phones = [];
         this.phoneCounter = 0;
-        this.chicken = new Chicken();
+        let chicken = new Chicken();
+        this.gameObjects.push(chicken);
         for (let i = 0; i < 5; i++) {
-            this.zombies.push(new Zombie(Math.random(), Math.random()));
+            this.gameObjects.push(new Zombie(chicken));
         }
         this.gameLoop();
     }
@@ -62,9 +83,8 @@ class Game {
             this.phones.push(new Phone());
             this.phoneCounter = 0;
         }
-        this.chicken.update();
-        for (const zombie of this.zombies) {
-            zombie.update();
+        for (const gameObject of this.gameObjects) {
+            gameObject.update();
         }
         requestAnimationFrame(() => this.gameLoop());
     }
@@ -76,50 +96,38 @@ class Game {
     }
 }
 window.addEventListener("load", () => Game.getInstance());
-class Grain extends HTMLElement {
+class Grain extends GameObject {
     constructor() {
         super();
-        this._x = 300;
-        this._y = 500;
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this);
-        this.draw();
-    }
-    draw() {
-        this.style.transform = "translate(" + this._x + "px, " + this._y + "px)";
     }
 }
 window.customElements.define("grain-component", Grain);
-class Phone extends HTMLElement {
+class Phone extends GameObject {
     constructor() {
         super();
-        this._x = 500;
-        this._y = 300;
-        this._direction = 1;
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this);
-        this.draw();
-    }
-    draw() {
-        this.style.transform = "translate(" + this._x + "px, " + this._y + "px) scale(" + this._direction + ",1)";
     }
 }
 window.customElements.define("phone-component", Phone);
-class Zombie extends HTMLElement {
-    constructor(randomX, randomY) {
+class Zombie extends GameObject {
+    constructor(chicken) {
         super();
-        this._direction = 1;
-        this._x = randomX * (window.innerWidth - 100) + 100;
-        this._y = randomY * (window.innerHeight - 100) + 100;
+        this._x = Math.random() * window.innerWidth;
+        this._y = (Math.random() * window.innerHeight / 2) + (window.innerHeight / 2);
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this);
+        chicken.signUp(this);
     }
-    update() {
-        this.draw();
-    }
-    draw() {
-        this.style.transform = "translate(" + this._x + "px, " + this._y + "px) scale(" + this._direction + ",1)";
+    alert() {
+        return;
     }
 }
 window.customElements.define("zombie-component", Zombie);
+class Facebook {
+}
+class WalkToPoint {
+}
 //# sourceMappingURL=main.js.map

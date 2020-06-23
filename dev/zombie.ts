@@ -1,14 +1,19 @@
 class Zombie extends GameObject implements Observer {
-    private _behavior:Behavior
+    // private _behavior:Behavior
+    _x = Math.random() * window.innerWidth
+    _y = (Math.random() * window.innerHeight / 2) + (window.innerHeight / 2)
 
-    constructor(randomX:number, randomY:number) {
+    constructor(chicken:Chicken) {
         super()
-
-        this._x = randomX * (window.innerWidth - 100) + 100
-        this._y = randomY * (window.innerHeight - 100) + 100
 
         let game = document.getElementsByTagName("game")[0]
         game.appendChild(this)
+
+        chicken.signUp(this)
+    }
+
+    alert(): void {
+        return
     }
 }
 

@@ -1,6 +1,5 @@
 class Game {
-    private chicken:GameObject
-    private zombies:GameObject[] = []
+    private gameObjects:GameObject[] = []
     private grains:Grain[] = []
     private grainCounter:number = 0
     private phones:Phone[] = []
@@ -9,9 +8,10 @@ class Game {
 
     private constructor() {
         // Kip en zombies laten spawnen
-        this.chicken = new Chicken()
+        let chicken:Chicken = new Chicken()
+        this.gameObjects.push(chicken)
         for(let i = 0; i < 5; i++) {
-            this.zombies.push(new Zombie(Math.random(), Math.random()))
+            this.gameObjects.push(new Zombie(chicken))
         }
  
         this.gameLoop()
@@ -34,9 +34,8 @@ class Game {
         }
 
         // beweging
-        this.chicken.update()
-        for(const zombie of this.zombies) {
-            zombie.update()
+        for(const gameObject of this.gameObjects) {
+            gameObject.update()
         }
         
         requestAnimationFrame(() => this.gameLoop())

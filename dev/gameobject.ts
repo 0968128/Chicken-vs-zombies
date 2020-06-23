@@ -1,4 +1,4 @@
-class GameObject extends HTMLElement {
+abstract class GameObject extends HTMLElement {
     // Fields
     protected _x: number = 0
     protected _y: number = 0  
