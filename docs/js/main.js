@@ -35,6 +35,7 @@ class Chicken extends GameObject {
         this.observers = [];
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this);
+        this._behavior = new WalkToPoint(this);
         window.addEventListener("click", (e) => this.onWindowClick(e));
     }
     onWindowClick(e) {
@@ -48,7 +49,7 @@ class Chicken extends GameObject {
         this.yspeed = ydist / distance;
         this.xspeed *= this.speedMultiplier;
         this.yspeed *= this.speedMultiplier;
-        this._direction = (this.xspeed < 0) ? 1 : -1;
+        this.direction = (this.xspeed < 0) ? 1 : -1;
     }
     update() {
         super.update();
@@ -126,8 +127,10 @@ class Zombie extends GameObject {
         super();
         this._x = Math.random() * window.innerWidth;
         this._y = (Math.random() * window.innerHeight / 2) + (window.innerHeight / 2);
+        this._speedMultiplier = 3;
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this);
+        this._behavior = new WalkToPoint(this);
         this.chicken = chicken;
         this.chicken.signUp(this);
     }
@@ -139,10 +142,12 @@ class Zombie extends GameObject {
         this.yspeed = ydist / distance;
         this.xspeed *= this.speedMultiplier;
         this.yspeed *= this.speedMultiplier;
-        this._direction = (this.xspeed < 0) ? 1 : -1;
+        this.direction = (this.xspeed < 0) ? 1 : -1;
     }
     update() {
         super.update();
+        this._x += this.xspeed;
+        this._y += this.yspeed;
         this.calculateSpeedToPoint(this.chicken.x, this.chicken.y);
     }
     alert() {

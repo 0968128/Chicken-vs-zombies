@@ -1,14 +1,20 @@
 class Zombie extends GameObject implements Observer {
-    // private _behavior:Behavior
+    // Fields
+    private _behavior:Behavior
     private chicken:Chicken
+
+    // Parent fields
     _x = Math.random() * window.innerWidth
     _y = (Math.random() * window.innerHeight / 2) + (window.innerHeight / 2)
+    _speedMultiplier = 3
 
     constructor(chicken:Chicken) {
         super()
 
         let game = document.getElementsByTagName("game")[0]
         game.appendChild(this)
+
+        this._behavior = new WalkToPoint(this)
 
         this.chicken = chicken
         this.chicken.signUp(this)
@@ -26,17 +32,18 @@ class Zombie extends GameObject implements Observer {
         this.yspeed *= this.speedMultiplier
 
         // Is de snelheid op de x-as negatief, dan wordt direction -1
-        // In de draw functie wordt dit gebruikt om de chicken naar links te laten kijken 
-        // als deze naar links beweegt
+        // In de draw functie wordt dit gebruikt om de zombie naar links te laten kijken als deze naar links beweegt
         this.direction = (this.xspeed < 0) ? 1 : -1;
     }
 
     update() {
         super.update()
+        this._x += this.xspeed;
+        this._y += this.yspeed;
         this.calculateSpeedToPoint(this.chicken.x, this.chicken.y)
     }
 
-    alert(): void {
+    alert():void {
         return
     }
 }

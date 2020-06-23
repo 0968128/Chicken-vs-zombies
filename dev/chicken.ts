@@ -1,7 +1,8 @@
 /// <reference path="gameobject.ts" />
 
 class Chicken extends GameObject implements Subject {
-    // private _behavior:Behavior
+    // Fields
+    private _behavior:Behavior
     private observers:Observer[] = []
 
     constructor() {
@@ -9,6 +10,8 @@ class Chicken extends GameObject implements Subject {
 
         let game = document.getElementsByTagName("game")[0]
         game.appendChild(this)
+
+        this._behavior = new WalkToPoint(this)
 
         window.addEventListener("click", (e:MouseEvent) => this.onWindowClick(e))
     }
