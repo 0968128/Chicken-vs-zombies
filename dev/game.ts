@@ -1,10 +1,11 @@
 class Game {
+    // Fields
     private gameObjects:GameObject[] = []
-    private grains:Grain[] = []
-    private grainCounter:number = 0
-    private phones:Phone[] = []
-    private phoneCounter:number = 0
     private static instance:Game
+
+    // Timers (ook fields)
+    private grainCounter:number = 0
+    private phoneCounter:number = 0
 
     private constructor() {
         // Kip en zombies laten spawnen
@@ -13,31 +14,33 @@ class Game {
         for(let i = 0; i < 5; i++) {
             this.gameObjects.push(new Zombie(chicken))
         }
- 
+
+        // Gameloop starten
         this.gameLoop()
     }
     
-    private gameLoop(){
+    private gameLoop() {
+        // Eén optellen per in-game-frame
         this.phoneCounter++
         this.grainCounter++
 
-        console.log(`${this.phoneCounter} en ${this.grainCounter}`)
-
+        // Als de counters een getal voorbijgaan: nieuw object spawnen en resetten
         if(this.grainCounter >= 180) {
-            this.grains.push(new Grain())
+            this.gameObjects.push(new Grain())
             this.grainCounter = 0
         }
 
         if(this.phoneCounter >= 300) {
-            this.phones.push(new Phone())
+            this.gameObjects.push(new Phone())
             this.phoneCounter = 0
         }
 
-        // beweging
+        // Objecten in het scherm laten verschijnen en bewegen
         for(const gameObject of this.gameObjects) {
             gameObject.update()
         }
         
+        // Gameloop aan de gang houden
         requestAnimationFrame(() => this.gameLoop())
     }
 

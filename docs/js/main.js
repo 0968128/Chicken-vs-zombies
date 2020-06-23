@@ -60,9 +60,7 @@ window.customElements.define("chicken-component", Chicken);
 class Game {
     constructor() {
         this.gameObjects = [];
-        this.grains = [];
         this.grainCounter = 0;
-        this.phones = [];
         this.phoneCounter = 0;
         let chicken = new Chicken();
         this.gameObjects.push(chicken);
@@ -74,13 +72,12 @@ class Game {
     gameLoop() {
         this.phoneCounter++;
         this.grainCounter++;
-        console.log(`${this.phoneCounter} en ${this.grainCounter}`);
         if (this.grainCounter >= 180) {
-            this.grains.push(new Grain());
+            this.gameObjects.push(new Grain());
             this.grainCounter = 0;
         }
         if (this.phoneCounter >= 300) {
-            this.phones.push(new Phone());
+            this.gameObjects.push(new Phone());
             this.phoneCounter = 0;
         }
         for (const gameObject of this.gameObjects) {
