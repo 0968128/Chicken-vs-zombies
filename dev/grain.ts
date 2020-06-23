@@ -1,3 +1,5 @@
+/// <reference path="gameobject.ts" />
+
 class Grain extends GameObject {
     constructor() {
         super()

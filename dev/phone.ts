@@ -1,3 +1,5 @@
+/// <reference path="gameobject.ts" />
+
 class Phone extends GameObject {
     constructor() {
         super()
