@@ -8,7 +8,7 @@ class WalkToPoint implements Behavior {
     }
 
     // Methods
-    private calculateSpeedToPoint(xPoint : number, yPoint : number) : void {
+    update(xPoint:number, yPoint:number) : void {
         let xdist = xPoint - this.object.x
         let ydist = yPoint - this.object.y
         let distance:number = Math.sqrt(xdist * xdist + ydist * ydist);

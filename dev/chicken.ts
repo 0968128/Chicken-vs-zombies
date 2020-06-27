@@ -2,7 +2,6 @@
 
 class Chicken extends GameObject implements Subject {
     // Fields
-    private _behavior:Behavior
     private observers:Observer[] = []
 
     constructor() {
@@ -11,50 +10,38 @@ class Chicken extends GameObject implements Subject {
         let game = document.getElementsByTagName("game")[0]
         game.appendChild(this)
 
-        this._behavior = new WalkToPoint(this)
-
         window.addEventListener("click", (e:MouseEvent) => this.onWindowClick(e))
+
+        this.behavior = new WalkToPoint(this)
     }
 
-    private onWindowClick(e:MouseEvent) : void {
+    private onWindowClick(e:MouseEvent):void {
         // Berekening van de snelheid waar naartoe verplaatst moet worden (positie muisklik)
-        this.calculateSpeedToPoint(e.clientX, e.clientY)
-    }
-    
-    /**
-     * Bepaalt de snelheid (en daarmee ook de richting) vanaf het huidige punt
-     * naar het punt dat meegegeven wordt
-     * @param xPoint x coordinaat van het punt waar naartoe verplaatst moet worden
-     * @param yPoint y coordinaat van het punt waar naartoe verplaatst moet worden
-     */
-    private calculateSpeedToPoint(xPoint:number, yPoint:number):void {
-        let xdist = xPoint - this._x
-        let ydist = yPoint - this._y
-        let distance:number = Math.sqrt(xdist * xdist + ydist * ydist);
-
-        this.xspeed = xdist / distance
-        this.yspeed = ydist / distance
-
-        this.xspeed *= this.speedMultiplier
-        this.yspeed *= this.speedMultiplier
-
-        // Is de snelheid op de x-as negatief, dan wordt direction -1
-        // In de draw functie wordt dit gebruikt om de chicken naar links te laten kijken als deze naar links beweegt
-        this.direction = (this.xspeed < 0) ? 1 : -1;
+        this.behavior.update(e.clientX, e.clientY)
     }
 
-    signUp(observer: Observer): void {
+    update() {
+        super.update()
+    }
+
+    signUp(observer: Observer):void {
         this.observers.push(observer)
     }
 
-    signOff(observer: Observer): void {
+    signOff(observer: Observer):void {
         let index = this.observers.indexOf(observer)
         this.observers.splice(index, 1)
     }
 
-    alertObservers(): void {
+    alertObservers():void {
         for(const observer of this.observers) {
             observer.alert()
+        }
+    }
+
+    onCollision(gameObject:GameObject):void {
+        if(gameObject instanceof Phone) {
+            this.alertObservers()
         }
     }
 }

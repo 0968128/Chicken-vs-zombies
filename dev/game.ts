@@ -1,12 +1,18 @@
 class Game {
     // Fields
     private gameObjects:GameObject[] = []
+    private _gameOver:boolean = false
+    private _score:number = 0
+    private _ui:Element = document.getElementsByTagName("ui")[0]
     private static instance:Game
-    private gameOver:boolean = false
 
     // Timers (ook fields)
     private grainCounter:number = 0
     private phoneCounter:number = 0
+
+    // Properties
+    public get gameOver() { return this._gameOver }
+    public set gameOver(value:boolean) { this._gameOver = value }
 
     private constructor() {
         // Kip en zombies laten spawnen
@@ -39,14 +45,40 @@ class Game {
         // Objecten in het scherm laten verschijnen en bewegen
         for(const gameObject of this.gameObjects) {
             gameObject.update()
+
+            this.checkCollision(gameObject)
+
+            this._ui.innerHTML = "Score " + this._score
         }
         
         // Gameloop aan de gang houden
         if(!this.gameOver) {
             requestAnimationFrame(() => this.gameLoop())
         } else {
-            // Code om game te resetten
+            for(const gameObject of this.gameObjects) {
+                gameObject.remove()
+                this._ui.innerHTML = "Je score is " + this._score + ". Herlaad de pagina (F5 of 'opnieuwpijl' linksbovenin de browser) om opnieuw te spelen."
+            }
+            this._score = 0
         }
+    }
+
+    private checkCollision(gameObject1:GameObject) {
+        // Code die objecten nagaat op botsingen
+        for(const gameObject2 of this.gameObjects) {
+            if(gameObject1.hasCollision(gameObject2)) {
+                gameObject1.onCollision(gameObject2)
+            }
+        }
+    }
+
+    public addScore():void {
+        this._score++
+    }
+
+    public removeGameObject(gameObject:GameObject) {
+        let index = this.gameObjects.indexOf(gameObject)
+        this.gameObjects.splice(index, 1)
     }
 
     public static getInstance():Game {
