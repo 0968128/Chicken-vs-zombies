@@ -20,10 +20,6 @@ class Chicken extends GameObject implements Subject {
         this.behavior.update(e.clientX, e.clientY)
     }
 
-    update() {
-        super.update()
-    }
-
     signUp(observer: Observer):void {
         this.observers.push(observer)
     }
