@@ -18,6 +18,8 @@ class Game {
         // Kip en zombies laten spawnen
         let chicken:Chicken = new Chicken()
         this.gameObjects.push(chicken)
+
+        // For loop enemy spawn
         for(let i = 0; i < 5; i++) {
             this.gameObjects.push(new Zombie(chicken))
         }
@@ -31,6 +33,9 @@ class Game {
         this.phoneCounter++
         this.grainCounter++
 
+        // Score bijwerken
+        this._ui.innerHTML = "Score " + this._score
+
         // Als de counters een getal voorbijgaan: nieuw object spawnen en resetten
         if(this.grainCounter >= 180) {
             this.gameObjects.push(new Grain())
@@ -42,13 +47,10 @@ class Game {
             this.phoneCounter = 0
         }
 
-        // Objecten in het scherm laten verschijnen en bewegen
+        // Objecten in het scherm laten verschijnen, bewegen en controleren op botsingen
         for(const gameObject of this.gameObjects) {
             gameObject.update()
-
             this.checkCollision(gameObject)
-
-            this._ui.innerHTML = "Score " + this._score
         }
         
         // Gameloop aan de gang houden
