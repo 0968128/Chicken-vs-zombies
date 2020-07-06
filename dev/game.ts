@@ -54,7 +54,7 @@ class Game {
         }
         
         // Gameloop aan de gang houden
-        if(!this.gameOver) {
+        if(!this._gameOver) {
             requestAnimationFrame(() => this.gameLoop())
         } else {
             for(const gameObject of this.gameObjects) {
